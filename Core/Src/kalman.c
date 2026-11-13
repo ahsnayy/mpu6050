@@ -111,7 +111,7 @@ void MPU6050_Update_Kalman(MPU6050_t *dev)
     }
 
     /* Hitung sudut roll dan pitch dari data accelerometer */
-    float acc_roll  = atan2f(dev->accel_y, dev->accel_z) * RAD_TO_DEG;
+    float acc_roll  = atan2f(-dev->accel_y, dev->accel_z) * RAD_TO_DEG;
     float acc_pitch = atan2f(-dev->accel_x, sqrtf(dev->accel_y * dev->accel_y + dev->accel_z * dev->accel_z)) * RAD_TO_DEG;
 
     /* Inisialisasi awal agar filter langsung mengunci sudut saat startup */
@@ -126,19 +126,23 @@ void MPU6050_Update_Kalman(MPU6050_t *dev)
         return;
     }
 
+    /* Negate roll and yaw gyro rates to match +roll right and +yaw clockwise */
+    float gyro_rate_x = -(dev->gyro_x - dev->gyro_offset_x);
+    float gyro_rate_y =   dev->gyro_y - dev->gyro_offset_y;
+    float gyro_rate_z = -(dev->gyro_z - dev->gyro_offset_z);
+
     /* Proteksi transisi sudut Roll ketika melompati batas -180 / +180 derajat */
     if ((acc_roll < -90.0f && KalmanX.angle > 90.0f) || (acc_roll > 90.0f && KalmanX.angle < -90.0f)) {
         Kalman_SetAngle(&KalmanX, acc_roll);
         dev->roll_k = acc_roll;
     } else {
-        dev->roll_k = Kalman_getAngle(&KalmanX, acc_roll, dev->gyro_x - dev->gyro_offset_x, dt);
+        dev->roll_k = Kalman_getAngle(&KalmanX, acc_roll, gyro_rate_x, dt);
     }
 
     /* Update filter Kalman untuk sumbu Pitch */
-    dev->pitch_k = Kalman_getAngle(&KalmanY, acc_pitch, dev->gyro_y - dev->gyro_offset_y, dt);
+    dev->pitch_k = Kalman_getAngle(&KalmanY, acc_pitch, gyro_rate_y, dt);
 
     /* Update filter Kalman untuk sumbu Yaw (prediksi gyro Z + deadband + wrapping [-180, +180]) */
-    float gyro_rate_z = dev->gyro_z - dev->gyro_offset_z;
     if (fabsf(gyro_rate_z) < KALMAN_YAW_DEADBAND) {
         gyro_rate_z = 0.0f;
     }
