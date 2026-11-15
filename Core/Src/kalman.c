@@ -105,9 +105,16 @@ void MPU6050_Update_Kalman(MPU6050_t *dev)
     }
 
     uint32_t now = HAL_GetTick();
-    float dt = (float)(now - kalman_last_tick) / 1000.0f;
+    uint32_t elapsed_ms = now - kalman_last_tick;
     kalman_last_tick = now;
 
+    if (elapsed_ms == 0) {
+        return; /* Tunggu minimal 1 ms agar dt akurat */
+    }
+
+    kalman_last_tick = now;
+    float dt = (float)elapsed_ms / 1000.0f;
+    
     /* Proteksi delta time pertama kali atau jika terdapat delay besar */
     if (dt <= 0.0f || dt > 0.5f) {
         dt = 0.05f;

@@ -10,7 +10,7 @@
 #endif
 
 #ifndef KALMAN_YAW_DEADBAND
-#define KALMAN_YAW_DEADBAND 0.50f /* Deadband threshold laju gyro Z (deg/s) */
+#define KALMAN_YAW_DEADBAND 0.90f /* Deadband threshold laju gyro Z (deg/s) */
 #endif
 
 typedef struct {

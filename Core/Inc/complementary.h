@@ -10,7 +10,7 @@ extern "C" {
 /* Parameter Tuning Complementary Filter */
 #define COMP_ALPHA              0.98f   /* Bobot filter gyro default (0.0f - 1.0f) */
 #define COMP_ACCEL_TOLERANCE    0.20f   /* Toleransi deviasi gravitasi (1.0g +/- 0.2g) */
-#define COMP_YAW_DEADBAND       0.50f   /* Deadband threshold laju gyro Z (deg/s) */
+#define COMP_YAW_DEADBAND       1.20f   /* Deadband threshold laju gyro Z (deg/s) */
 #define COMP_CALIB_SAMPLES      500     /* Jumlah sampel kalibrasi gyro statis */
 
 #ifndef RAD_TO_DEG
