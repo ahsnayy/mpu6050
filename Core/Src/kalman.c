@@ -11,6 +11,7 @@
 #include <math.h>
 #include "kalman.h"
 
+/*Konstanta kalman untuk roll*/
 Kalman_t KalmanX = {
     .Q_angle = 0.0001f,
     .Q_bias = 0.003f,
@@ -20,6 +21,7 @@ Kalman_t KalmanX = {
     .P = {{0.0f, 0.0f}, {0.0f, 0.0f}}
 };
 
+/*Konstanta kalman untuk pitch*/
 Kalman_t KalmanY = {
     .Q_angle = 0.0001f,
     .Q_bias = 0.003f,
@@ -29,6 +31,7 @@ Kalman_t KalmanY = {
     .P = {{0.0f, 0.0f}, {0.0f, 0.0f}}
 };
 
+/*Konstanta kalman untuk yaw*/
 Kalman_t KalmanZ = {
     .Q_angle = 0.0001f,
     .Q_bias = 0.003f,
@@ -139,10 +142,10 @@ void MPU6050_Update_Kalman(MPU6050_t *dev)
         dev->roll_k = Kalman_getAngle(&KalmanX, acc_roll, gyro_rate_x, dt);
     }
 
-    /* Update filter Kalman untuk sumbu Pitch */
+    /* filter Kalman untuk sumbu Pitch */
     dev->pitch_k = Kalman_getAngle(&KalmanY, acc_pitch, gyro_rate_y, dt);
 
-    /* Update filter Kalman untuk sumbu Yaw (prediksi gyro Z + deadband + wrapping [-180, +180]) */
+    /* filter Kalman untuk sumbu Yaw (prediksi gyro Z + deadband + wrapping [-180, +180]) */
     if (fabsf(gyro_rate_z) < KALMAN_YAW_DEADBAND) {
         gyro_rate_z = 0.0f;
     }

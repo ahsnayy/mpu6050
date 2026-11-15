@@ -77,9 +77,7 @@ extern "C" {
 /* Timeout komunikasi I2C (ms) */
 #define MPU6050_I2C_TIMEOUT         100
 
-/**
-  * @brief Struct penyimpan instance dan data sensor MPU6050.
-  */
+//  Struct penyimpan instance dan data sensor MPU6050.
 typedef struct {
     I2C_HandleTypeDef *hi2c;    /* Handle I2C peripheral STM32 */
     uint8_t dev_addr;           /* Alamat I2C sensor (shifted) */

@@ -69,6 +69,11 @@ static void MX_USART1_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+/* Function untuk mengubah data float hasil complementart dan kalman menjadi 
+string untuk dikirim menggunakan UART. Hal ini karena jika langsung menggunakna 
+float, mcu f103c8t6 tidak memiliki kemampuannya yang cukup untuk memrosesnya*/
+
 static void format_float(char *buf, size_t size, float val)
 {
   if (val < 0.0f)
@@ -155,6 +160,7 @@ int main(void)
       MPU6050_Update_Kalman(&mpu);
       MPU6050_Update_Angle(&mpu);
 
+      // UNCOMENT JIKA INGIN MENGIRIM TANPA MAVLINK
       /*
       uart.comple = mpu.roll;
       uart.kalman = mpu.roll_k;
@@ -171,7 +177,7 @@ int main(void)
       HAL_UART_Transmit(&huart1, (uint8_t*)tx_buf, (uint16_t)len, HAL_MAX_DELAY);
       */
 
-      // /* Comment this call to send only plain-text data without MAVLink format */
+      // UNCOMMENT JIKA INGIN MENGIRIM MENGGUNAKAN MAVLINK
       MAVLink_Attitude_Send(&huart1, &(MAVLink_Attitude_t){
           .time_boot_ms = HAL_GetTick(),
           .roll         = mpu.roll_k * MAVLINK_DEG_TO_RAD,

@@ -1,11 +1,3 @@
-/**
-  ******************************************************************************
-  * @file    complementary.h
-  * @brief   Complementary Filter driver for MPU6050 (Roll, Pitch, and Yaw).
-  *          Features adaptive accelerometer weighting and stabilized Z-axis yaw.
-  ******************************************************************************
-  */
-
 #ifndef _COMPLEMENTARY_H
 #define _COMPLEMENTARY_H
 
